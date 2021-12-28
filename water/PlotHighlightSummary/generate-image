@@ -1,0 +1,20 @@
+#!/bin/bash
+
+NAME=PlotHighlightSummary
+BASE_IMAGE=r-base:4.1.0
+IMAGE_CUSTOMIZATIONS=$(cat <<'EOF'
+RUN apt-get update && apt-get install -y \
+   libfontconfig1-dev \
+   pandoc
+
+RUN R -e "install.packages('kableExtra', repos='http://cran.us.r-project.org')" \
+  && R -e "install.packages('optparse', repos='http://cran.us.r-project.org')"
+
+COPY . /usr/local/src/
+WORKDIR /usr/local/src/
+
+ENTRYPOINT ["Rscript", "--vanilla", "script.R"]
+EOF
+)
+
+source ../generate.sh
